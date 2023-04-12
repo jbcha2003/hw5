@@ -31,8 +31,9 @@ std::set<std::string> wordle(
     set<std::string> validWords;
     string fltChars = floating;
     set<char> floatChars;
+    //add each floating character to the map
     for (char i : fltChars) {
-        floatChars.insert(i);
+       floatChars.insert(i);
     }
     string word = in;
     set<string> dictionary = dict;
@@ -58,6 +59,7 @@ void wordleHelper(
 {
 
     //use a map to check how many times we have used each float
+    //use string to check if float has been used or not
     //check the size of the remaining floating to the number of empty emptySpots
     //place the alphabet one by one and check the remaining spots 
     //if the size of the floating is less than or equal to the number of empty spots, place them in the spots
@@ -73,11 +75,7 @@ void wordleHelper(
         }
     }
     //if the current location is an empty spot
-    if (word[currentLocation] != '-') {
-        //cout <<"working";
-        wordleHelper(emptySpots, currentLocation + 1, floating, word, dict, validWords, floatChars);
-    }
-    else {
+    else if (word[currentLocation] == '-') {
         //if there are remaining floating characters
         if (floating.size() == emptySpots) {
             //set<char> temp = floatChars;
@@ -99,6 +97,7 @@ void wordleHelper(
             for (char letter : alphabet) {
                 //check if the letter in the alphabet has been used already in the float
                 //word[currentLocation - 1] = letter;
+                //if the letter is in float
                 if (floating.find(letter) != std::string::npos) {
                     word[currentLocation] = letter;
                     floating.erase(floating.find(letter), 1);
@@ -106,13 +105,18 @@ void wordleHelper(
                     word[currentLocation] = '-';
                     floating+=letter;
                 }
-                else {
+                //if the letter is not in float
+                else{
                     word[currentLocation] = letter;
                     wordleHelper(emptySpots - 1, currentLocation + 1, floating, word, dict, validWords, floatChars);
                     word[currentLocation] = '-';
                 }
             }
         }
+    }
+    else if (word[currentLocation] != '-') {
+        //cout <<"working";
+        wordleHelper(emptySpots, currentLocation + 1, floating, word, dict, validWords, floatChars);
     }
     return;
 }
